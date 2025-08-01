@@ -1,4 +1,3 @@
-# translator.py
 import argostranslate.translate
 
 def translate_text(text: str, from_lang: str, to_lang: str) -> str:
