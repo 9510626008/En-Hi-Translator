@@ -17,20 +17,35 @@ This is a simple multilingual translation web application built using **FastAPI*
 ## 🏗️ Project Structure
 
 Translator/
+<br>
 │
+<br>
 ├── app/
+<br>
 │ ├── init.py
+<br>
 │ ├── main.py # FastAPI entry point
+<br>
 │ ├── translator.py # Translation logic
+<br>
 │ └── download_models.py # One-time translation model setup
+<br>
 │
+<br>
 ├── templates/
+<br>
 │ └── index.html # Web UI
+<br>
 │
+<br>
 ├── run.py # Starts the FastAPI server
+<br>
 ├── requirements.txt # Dependencies
+<br>
 ├── .gitignore
+<br>
 └── README.md
+<br>
 
 
 ---
