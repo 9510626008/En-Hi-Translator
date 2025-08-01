@@ -1,40 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Offline Translator</title>
-    <script>
-        function autoSelectToLanguage() {
-            const fromLang = document.getElementById('from_lang').value;
-            const toLang = document.getElementById('to_lang');
+  <meta charset="UTF-8" />
+  <title>Offline Translator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Enable Tailwind dark mode via class
+    tailwind.config = { darkMode: 'class' };
 
-            if (fromLang === 'en') {
-                toLang.value = 'hi';
-            } else if (fromLang === 'hi') {
-                toLang.value = 'en';
-            }
-        }
-    </script>
+    // Load saved theme
+    if (
+      localStorage.getItem("theme") === "dark" ||
+      (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+    }
+
+    // Toggle theme
+    function toggleDarkMode() {
+      const root = document.documentElement;
+      root.classList.toggle("dark");
+      localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");
+    }
+
+    // Swap language values
+    function swapLanguages() {
+      const fromSelect = document.getElementById('from_lang');
+      const toSelect = document.getElementById('to_lang');
+      const temp = fromSelect.value;
+      fromSelect.value = toSelect.value;
+      toSelect.value = temp;
+    }
+  </script>
 </head>
-<body>
-    <h2>🔁 Offline English ↔ Hindi Translator</h2>
-    <form method="post" action="/translate">
-        <textarea name="text" rows="5" cols="60" placeholder="Enter text">{{ text or '' }}</textarea><br><br>
-        <label>From:</label>
-        <select name="from_lang" id="from_lang" onchange="autoSelectToLanguage()">
-            <option value="en" {% if from_lang == 'en' %}selected{% endif %}>English</option>
-            <option value="hi" {% if from_lang == 'hi' %}selected{% endif %}>Hindi</option>
-        </select>
-        <label>To:</label>
-        <select name="to_lang" id="to_lang">
-            <option value="hi" {% if to_lang == 'hi' %}selected{% endif %}>Hindi</option>
-            <option value="en" {% if to_lang == 'en' %}selected{% endif %}>English</option>
-        </select>
-        <button type="submit">Translate</button>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans min-h-screen flex items-center justify-center px-4">
+  <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8 w-full max-w-2xl">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">🌐 Offline English ↔ Hindi Translator</h1>
+      <!-- <button onclick="toggleDarkMode()" class="text-sm bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600">
+        🌗 Toggle Theme
+      </button> -->
+      <div class="mt-6 flex justify-center">
+        <button type="button" onclick="toggleDarkMode()" class="p-2 rounded-full bg-white dark:bg-gray-700 shadow hover:scale-110 transition">
+          <!-- Light mode icon -->
+          <img src="/static/images/light.png" alt="Swap" class="w-8 h-8 block dark:hidden" />
+          <!-- Dark mode icon -->
+          <img src="/static/images/night.png" alt="Swap" class="w-8 h-8 hidden dark:block" />
+        </button>
+      </div>
+
+    </div>
+
+    <form method="post" action="/translate" class="space-y-4">
+      <textarea name="text" rows="5" placeholder="Enter text to translate..." class="w-full p-4 border rounded-lg resize-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ text or '' }}</textarea>
+
+      <div class="flex items-center gap-4">
+        <div class="w-full">
+          <label class="block mb-1 font-semibold">From:</label>
+          <div class="flex items-center gap-2">
+            <select name="from_lang" id="from_lang" class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+              <option value="en" {% if from_lang == 'en' %}selected{% endif %}>English</option>
+              <option value="hi" {% if from_lang == 'hi' %}selected{% endif %}>Hindi</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Swap Button -->
+        <div class="pt-6">
+          <button type="button" onclick="swapLanguages()" class="p-2 rounded-full bg-white dark:bg-gray-700 shadow hover:scale-110 transition">
+            <img src="/static/images/swap.png" alt="Swap" style="width: 6rem;" class="h-8" />
+          </button>
+        </div>
+
+        <div class="w-full">
+          <label class="block mb-1 font-semibold">To:</label>
+          <div class="flex items-center gap-2">
+            <select name="to_lang" id="to_lang" class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+              <option value="hi" {% if to_lang == 'hi' %}selected{% endif %}>Hindi</option>
+              <option value="en" {% if to_lang == 'en' %}selected{% endif %}>English</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition">
+        🚀 Translate
+      </button>
     </form>
 
     {% if result %}
-        <h3>🎯 Translated Text:</h3>
-        <p><strong>{{ result }}</strong></p>
+    <div class="mt-6 bg-green-100 dark:bg-green-900 p-4 rounded-lg border border-green-300 dark:border-green-600">
+      <h3 class="text-lg font-semibold text-green-800 dark:text-green-300">🎯 Translated Text:</h3>
+      <p class="mt-2 text-gray-800 dark:text-gray-200">{{ result }}</p>
+    </div>
     {% endif %}
+  </div>
 </body>
 </html>
