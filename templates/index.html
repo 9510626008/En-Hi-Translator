@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Offline Translator</title>
+    <script>
+        function autoSelectToLanguage() {
+            const fromLang = document.getElementById('from_lang').value;
+            const toLang = document.getElementById('to_lang');
+
+            if (fromLang === 'en') {
+                toLang.value = 'hi';
+            } else if (fromLang === 'hi') {
+                toLang.value = 'en';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>🔁 Offline English ↔ Hindi Translator</h2>
+    <form method="post" action="/translate">
+        <textarea name="text" rows="5" cols="60" placeholder="Enter text">{{ text or '' }}</textarea><br><br>
+        <label>From:</label>
+        <select name="from_lang" id="from_lang" onchange="autoSelectToLanguage()">
+            <option value="en" {% if from_lang == 'en' %}selected{% endif %}>English</option>
+            <option value="hi" {% if from_lang == 'hi' %}selected{% endif %}>Hindi</option>
+        </select>
+        <label>To:</label>
+        <select name="to_lang" id="to_lang">
+            <option value="hi" {% if to_lang == 'hi' %}selected{% endif %}>Hindi</option>
+            <option value="en" {% if to_lang == 'en' %}selected{% endif %}>English</option>
+        </select>
+        <button type="submit">Translate</button>
+    </form>
+
+    {% if result %}
+        <h3>🎯 Translated Text:</h3>
+        <p><strong>{{ result }}</strong></p>
+    {% endif %}
+</body>
+</html>
